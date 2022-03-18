@@ -1,5 +1,7 @@
-const Model = require('./ModelTableProviders')
-module.exports = {
+import { Model } from './ModelTableProviders.js'
+import { NotFound } from '../../errors/NotFound.js'
+
+export const tableProvider = {
     list () {
         return Model.findAll()
     },
@@ -14,7 +16,7 @@ module.exports = {
         })
 
         if(!foundProvider){
-            throw new Error('Provider not found')
+            throw new NotFound()
         }
         return foundProvider
     },

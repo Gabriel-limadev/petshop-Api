@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize')
-const instancia = require('../../database')
+import { Sequelize } from 'sequelize'
+import {instancia} from '../../database/index.js'
 
 const columns = {
     "company": {
@@ -25,4 +25,4 @@ const options = {
     'version': 'version'
 }
 
-module.exports = instancia.define('provider', columns, options)
+export const Model = instancia.define('provider', columns, options)

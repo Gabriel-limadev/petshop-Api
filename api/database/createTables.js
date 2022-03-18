@@ -1,4 +1,4 @@
-const ModelTable = require('../routers/providers/ModelTableProviders')
+import ModelTable from './../routers/providers/ModelTableProviders
 
 ModelTable
     .sync()

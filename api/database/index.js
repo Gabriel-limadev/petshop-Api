@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize')
-const config = require('config')
+import { Sequelize } from 'sequelize';
+import config from 'config';
 
-const instancia = new Sequelize(
+export const instancia = new Sequelize(
     config.get('postgres.database'),
     config.get('postgres.user'),
     config.get('postgres.password'), 
@@ -10,5 +10,3 @@ const instancia = new Sequelize(
         'dialect': 'postgres'
     } 
 )
-
-module.exports = instancia;

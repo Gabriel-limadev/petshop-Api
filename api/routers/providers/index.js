@@ -1,95 +1,76 @@
-const router = require('express').Router()
-const Tableprovider = require('./TableProvider');
-const Provider = require('./Provider');
+import { Router } from 'express';
+import { Provider } from './Provider.js';
+import { tableProvider } from './TableProvider.js';
 
-
+const router = Router()
 // LIST ALL PROVIDERS
-router.get('/', async (request, response)=>{
-    const results = await Tableprovider.list()
-    response.status(200)
-    response.send(
+router.get('/', async (req, res)=>{
+    const results = await tableProvider.list()
+    res.status(200)
+    res.send(
         JSON.stringify(results)
     )
 })
 
 // DETAIL PROVIDER
-router.get('/:idProvider', async (request, response)=>{
+router.get('/:idProvider', async (req, res, next)=>{
     try{
-        const id = request.params.idProvider
+        const id = req.params.idProvider
         const provider = new Provider({ id: id })
         await provider.load()
-        response.status(200)
-        response.send(
+        res.status(200)
+        res.send(
             JSON.stringify(provider)
         )
     }catch(error){
-        response.status(400)
-        response.send(
-            JSON.stringify({
-                "message": error.message
-            })
-        )
+        next(error)
     }
 })
 
 // CREATE NEW PROVIDER
-router.post('/', async (request, response) => {
+router.post('/', async (req, res, next) => {
     try{
-        const receivedData = request.body
+        const receivedData = req.body
         const provider = new Provider(receivedData)
         await provider.create()
-        response.status(201)
-        response.send(
+        res.status(201)
+        res.send(
             JSON.stringify(provider)
         )
     }catch(error){
-        response.status(400)
-        response.send(
-            JSON.stringify({
-                "message": error.message
-            })
-        )
+        next(error)
     }
 })
 
 // UPDATE A PROVIDER
-router.put('/:idProvider', async (request, response) => {
+router.put('/:idProvider', async (req, res, next) => {
     try{
-        const id = request.params.idProvider
-        const receivedData = request.body
+        const id = req.params.idProvider
+        const receivedData = req.body
+        // Overwriting previous data
         const data = Object.assign({}, receivedData, {"id": id})
         const provider = new Provider(data)
         await provider.update()
-        response.status(204)
-        response.end()
+        res.status(204)
+        res.end()
     }catch(error){
-        response.status(400)
-        response.send(
-            JSON.stringify({
-                "message": error.message
-            })
-        )
+        next(error)
     }
 })
 
 // DELETE A PROVIDER
-router.delete('/:idProvider', async (request, response) => {
+router.delete('/:idProvider', async (req, res, next) => {
     try{
-        const id = request.params.idProvider
+        const id = req.params.idProvider
         const provider = new Provider({"id": id})
         await provider.load()
         await provider.delete()
-        response.status(204)
-        response.end()
+        res.status(204)
+        res.end()
 
     }catch(error){
-        response.status(404)
-        response.send(
-            JSON.stringify({
-                "message": error.message
-            })
-        )
+        next(error)
     }
 })
 
-module.exports = router
+export { router };

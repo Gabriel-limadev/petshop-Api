@@ -3,7 +3,7 @@ import { NotFound } from '../../errors/NotFound.js'
 
 export const tableProvider = {
     list () {
-        return Model.findAll()
+        return Model.findAll({ raw: true})
     },
     insert(provider){
         return Model.create(provider)

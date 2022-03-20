@@ -1,4 +1,4 @@
-import express from 'express'
+import express from 'express';
 import config from 'config';
 import { router } from './routers/providers/index.js';
 
@@ -7,13 +7,32 @@ import { InvalidField } from './errors/InvalidField.js';
 import { NodataProvided } from './errors/NoDataProvided.js';
 import { UnsupportedValue } from './errors/UnsupportedValue.js';
 
+import { serializer }  from './Serializer.js'
+
 const app = express()
 app.use(express.json())
+
+app.use((req, res, next) =>{
+    let reqFormat = req.header('Accept')
+
+    if(reqFormat === '*/*'){
+        reqFormat = 'application/json'
+    }
+
+    if (serializer.acceptFormat.indexOf(reqFormat) === -1){
+        res.status(406)
+        res.end()
+        return 
+    }
+
+    res.setHeader('Content-Type', reqFormat)
+    next()
+})
 
 // ROUTERS
 app.use('/api/providers', router)
 
-// MIDDLER FOR ERRORS
+// MIDDLEWARE FOR ERRORS
 app.use((error, req, res, next)=>{
     let status = 500
     if (error instanceof NotFound){

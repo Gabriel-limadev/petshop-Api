@@ -1,14 +1,18 @@
 import { Router } from 'express';
 import { Provider } from './Provider.js';
 import { tableProvider } from './TableProvider.js';
+import { serializer } from '../../Serializer.js';
 
 const router = Router()
 // LIST ALL PROVIDERS
 router.get('/', async (req, res)=>{
     const results = await tableProvider.list()
     res.status(200)
+    const ProSerializer = new serializer.ProviderSerializer(
+        res.getHeader('Content-Type')
+    )
     res.send(
-        JSON.stringify(results)
+        ProSerializer.serializer(results)
     )
 })
 
@@ -19,8 +23,11 @@ router.get('/:idProvider', async (req, res, next)=>{
         const provider = new Provider({ id: id })
         await provider.load()
         res.status(200)
+        const ProSerializer = new serializer.ProviderSerializer(
+            res.getHeader('Content-Type')
+        )
         res.send(
-            JSON.stringify(provider)
+            ProSerializer.serializer(provider)
         )
     }catch(error){
         next(error)
@@ -34,8 +41,11 @@ router.post('/', async (req, res, next) => {
         const provider = new Provider(receivedData)
         await provider.create()
         res.status(201)
+        const ProSerializer = new serializer.ProviderSerializer(
+            res.getHeader('Content-Type')
+        )
         res.send(
-            JSON.stringify(provider)
+            ProSerializer.serializer(provider)
         )
     }catch(error){
         next(error)

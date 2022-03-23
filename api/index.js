@@ -45,9 +45,12 @@ app.use((error, req, res, next)=>{
         status = 406
     }
 
+    const serializers = new serializer.ErrorsSerializer(
+        res.getHeader('Content-Type')
+    )
     res.status(status)
     res.send(
-        JSON.stringify({
+        serializers.serializer({
             "message": error.message,
             "id": error.idError
         })

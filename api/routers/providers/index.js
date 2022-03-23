@@ -24,7 +24,8 @@ router.get('/:idProvider', async (req, res, next)=>{
         await provider.load()
         res.status(200)
         const ProSerializer = new serializer.ProviderSerializer(
-            res.getHeader('Content-Type')
+            res.getHeader('Content-Type'), 
+            ['email', 'dateCreate', 'dateUpdate', 'version']
         )
         res.send(
             ProSerializer.serializer(provider)

@@ -23,6 +23,7 @@
     "body-parser": "^1.19.2",
     "config": "^3.3.7",
     "express": "^4.17.3",
+    "jsontoxml": "^1.0.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.17.0"
